@@ -5,31 +5,53 @@ DB = Sequel.connect(connection_string)                                          
 #######################################################################################
 
 # Database schema - this should reflect your domain model
-DB.create_table! :events do
+DB.create_table! :trips do
   primary_key :id
-  String :title
-  String :description, text: true
-  String :date
+  foreign_key :user_id
   String :location
+  String :lengthnum
+  String :lengthunit
+  String :description, text: true
 end
-DB.create_table! :rsvps do
+
+DB.create_table! :users do
   primary_key :id
-  foreign_key :event_id
-  Boolean :going
   String :name
   String :email
-  String :comments, text: true
+  String :password
+end
+
+DB.create_table! :following do
+  primary_key :id
+  foreign_key :user_id
+  String :followinguser_id
+end
+
+DB.create_table! :likes do
+  primary_key :id
+  foreign_key :trip_id
+  foreign_key :user_id
 end
 
 # Insert initial (seed) data
-events_table = DB.from(:events)
+trips_table = DB.from(:trips)
+users_table = DB.from(:users)
+likes_table = DB.from(:likes)
 
-events_table.insert(title: "Bacon Burger Taco Fest", 
-                    description: "Here we go again bacon burger taco fans, another Bacon Burger Taco Fest is here!",
-                    date: "June 21",
-                    location: "Kellogg Global Hub")
+trips_table.insert(user_id: 1,
+                    location: "Seoul",
+                    lengthnum: 7,
+                    lengthunit: "Days",
+                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
 
-events_table.insert(title: "Kaleapolooza", 
-                    description: "If you're into nutrition and vitamins and stuff, this is the event for you.",
-                    date: "July 4",
-                    location: "Nowhere")
+trips_table.insert(user_id: 1,
+                    location: "Iceland",
+                    lengthnum: 2,
+                    lengthunit: "Weeks",
+                    description: "I drove around the country!")
+
+users_table.insert(name: "Indiana Jones",
+                    email: "indianajones@gmail.com",
+                    password: "travel")
+
+puts "Success!"
