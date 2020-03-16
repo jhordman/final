@@ -1,6 +1,9 @@
-<h1 class="text-center">Trip Feed</h1>
+<h1 class="text-center">All Trips</h1>
 
 <% likes_table = DB.from(:likes) %>
+<% trips_table = DB.from(:trips) %>
+<% users_table = DB.from(:users) %>
+<% following_table = DB.from(:following) %>
 
 <div class="container my-3">
     <div class="row">
@@ -39,10 +42,10 @@
                             
                             <!-- if they are signed in, see if they already like it -->
                             <% elsif likes_table.where(user_id: @current_user[:id], trip_id: trip[:id]).to_a[0] %>
-                                <a href="/unlike/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Unlike</button></a>
+                                <a href="/unlike/success/<%= trip[:id] %>"><button type="button" class="btn btn-primary">Unlike</button></a>
                             <!-- otherwise, give them the option to like it -->
                             <% else %>
-                                <a href="/like/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Like</button></a>
+                                <a href="/like/success/<%= trip[:id] %>"><button type="button" class="btn btn-primary">Like</button></a>
                             <% end %>
 
                         </div>

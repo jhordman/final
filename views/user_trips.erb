@@ -52,13 +52,13 @@
                         <!-- if not signed in, point to sign-in -->
                         <% if not @current_user %>
                             <a href="/logins/new"><button type="button" class="btn btn-primary">Sign In to Like</button></a>   
-                        
+
                         <!-- if they are signed in, see if they already like it -->
                         <% elsif likes_table.where(user_id: @current_user[:id], trip_id: trip[:id]).to_a[0] %>
-                            <a href="/unlike/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Unlike</button></a>
+                            <a href="/unlike/success/<%= trip[:id] %>/profile"><button type="button" class="btn btn-primary">Unlike</button></a>
                         <!-- otherwise, give them the option to like it -->
                         <% else %>
-                            <a href="/like/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Like</button></a>
+                            <a href="/like/success/<%= trip[:id] %>/profile"><button type="button" class="btn btn-primary">Like</button></a>
                         <% end %>
 
                     </div>

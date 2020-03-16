@@ -104,16 +104,42 @@ get "/like/success/:id" do
     redirect "/"
 end
 
+get "/like/success/:id/profile" do
+    puts "params: #{params}"   
+    @trip = trips_table.where(id: params[:id]).to_a[0]
+    @poster = users_table.where(id: @trip[:user_id]).to_a[0][:name]
+    @posterid = users_table.where(id: @trip[:user_id]).to_a[0][:id]
+
+    likes_table.insert(
+        trip_id: params["id"],
+        user_id: session["user_id"]
+    )
+
+    redirect "/user/#{@posterid}"
+end
+
 get "/unlike/success/:id" do
     puts "params: #{params}"   
-    puts "session: #{session}"
 
     @trip = trips_table.where(id: params[:id]).to_a[0]
     @poster = users_table.where(id: @trip[:user_id]).to_a[0][:name]
+    @posterid = users_table.where(id: @trip[:user_id]).to_a[0][:id]
 
     likes_table.where(user_id: @current_user[:id], trip_id: params["id"]).delete
 
     redirect "/"
+end
+
+get "/unlike/success/:id/profile" do
+    puts "params: #{params}"   
+
+    @trip = trips_table.where(id: params[:id]).to_a[0]
+    @poster = users_table.where(id: @trip[:user_id]).to_a[0][:name]
+    @posterid = users_table.where(id: @trip[:user_id]).to_a[0][:id]
+
+    likes_table.where(user_id: @current_user[:id], trip_id: params["id"]).delete
+
+    redirect "/user/#{@posterid}"
 end
 
 get "/user/:id" do
