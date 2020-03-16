@@ -32,7 +32,12 @@ get "/" do
     @feed = trips_table.all.to_a
     # OR trips_table.where(user_id: @current_user[:id].to_a)
     
-    view "feed"
+    if @current_user
+        view "feed"
+    else   
+        view "new_login"
+    end
+
 end
 
 get "/users/new" do
@@ -176,6 +181,8 @@ post "/addtrip/create" do
     @usertrips = trips_table.where(user_id: @current_user[:id]).to_a
     @username = users_table.where(id: @current_user[:id]).to_a[0][:name]
     @userid = @current_user[:id]
+    @following_list = following_table.where(user_id: @userid).to_a
+    @follower_list = following_table.where(target_user: params[:id]).to_a
 
     view "user_trips"
 end
@@ -210,8 +217,6 @@ end
 
 post "/trip/:id/update" do
     puts "params: #{params}"
-    @trip = trips_table.where(id: params[:id]).to_a[0]
-    @user = users_table.where(id: @trip[:user_id]).to_a[0]
 
     trips_table.where(id: params["id"]).update(
         user_id: session["user_id"],    
@@ -221,18 +226,15 @@ post "/trip/:id/update" do
         description: params["description"]
     )
 
-    redirect "/user/#{@user[:id]}"
+    redirect "/user/#{@current_user[:id]}"
 end
 
 get "/trip/:id/destroy" do
     puts "params: #{params}"
-
-    @trip = trips_table.where(id: params[:id]).to_a[0]
-    @user = users_table.where(id: @trip[:user_id]).to_a[0]
     
     trips_table.where(id: params["id"]).delete
 
-    redirect "/user/#{@user[:id]}"
+    redirect "/user/#{@current_user[:id]}"
 end
 
 get "/discover" do

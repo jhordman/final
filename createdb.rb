@@ -40,19 +40,13 @@ likes_table = DB.from(:likes)
 following_table = DB.from(:following)
 
 trips_table.insert(user_id: 1,
-                    location: "Seoul",
-                    lengthnum: 7,
-                    lengthunit: "Days",
-                    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.")
-
-trips_table.insert(user_id: 1,
-                    location: "Iceland",
+                    location: "China",
                     lengthnum: 2,
                     lengthunit: "Weeks",
-                    description: "I drove around the country!")
+                    description: "I visited amazing places and discovered all sorts of cool things.")
 
-users_table.insert(name: "Indiana Jones",
-                    email: "indianajones@gmail.com",
-                    password: "travel")
+users_table.insert(name: "Marco Polo",
+                    email: "marcopolo@gmail.com",
+                    password: "silkroad")
 
 puts "Success!"
