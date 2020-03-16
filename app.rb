@@ -94,25 +94,84 @@ get "/like/success/:id" do
     
     @trip = trips_table.where(id: params[:id]).to_a[0]
     @poster = users_table.where(id: @trip[:user_id]).to_a[0][:name]
+    @posterid = users_table.where(id: @trip[:user_id]).to_a[0][:name]
 
     likes_table.insert(
         trip_id: params["id"],
         user_id: session["user_id"]
     )
 
-    view "like_success"
+    redirect "/"
 end
 
 get "/unlike/success/:id" do
     puts "params: #{params}"   
-    
+    puts "session: #{session}"
+
     @trip = trips_table.where(id: params[:id]).to_a[0]
     @poster = users_table.where(id: @trip[:user_id]).to_a[0][:name]
 
-    likes_table.insert(
-        trip_id: params["id"],
-        user_id: session["user_id"]
-    )
+    likes_table.where(user_id: @current_user[:id], trip_id: params["id"]).delete
 
-    view "unlike_success"
+    redirect "/"
+end
+
+get "/user/:id" do
+    puts "params: #{params}"
+    
+    @usertrips = trips_table.where(user_id: params[:id]).to_a
+    @username = users_table.where(id: params[:id]).to_a[0][:name]
+    @userid = users_table.where(id: params[:id]).to_a[0][:id]
+    @following_list = following_table.where(user_id: @userid).to_a
+    @follower_list = following_table.where(target_user: params[:id]).to_a
+
+    if not @current_user
+        redirect "/logins/new"
+    else 
+        view "user_trips"
+    end
+end
+
+get "/addtrip" do
+    view "add_trip"
+end
+
+post "/addtrip/create" do
+    puts "params: #{params}"
+    
+    trips_table.insert(
+        user_id: session["user_id"],    
+        location: params["location"],
+        lengthnum: params["lengthnum"],
+        lengthunit: params["lengthunit"],
+        description: params["description"]               
+    )    
+
+    @usertrips = trips_table.where(user_id: @current_user[:id]).to_a
+    @username = users_table.where(id: @current_user[:id]).to_a[0][:name]
+    @userid = @current_user[:id]
+
+    view "user_trips"
+end
+
+get "/follow/user/:id" do
+    puts "params: #{params}"
+
+    @following_username = users_table.where(id: params[:id]).to_a[0][:name]
+    @following_userid = users_table.where(id: params[:id]).to_a[0][:id]
+
+    following_table.insert(
+        user_id: @current_user[:id],   
+        target_user: @following_userid      
+    )   
+
+    view "follow_success"
+end
+
+get "/unfollow/user/:id" do
+    puts "params: #{params}"
+
+    following_table.where(user_id: @current_user[:id], target_user: params["id"]).delete
+
+    redirect"/"
 end

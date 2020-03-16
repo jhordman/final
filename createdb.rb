@@ -24,7 +24,7 @@ end
 DB.create_table! :following do
   primary_key :id
   foreign_key :user_id
-  String :followinguser_id
+  String :target_user
 end
 
 DB.create_table! :likes do
@@ -37,6 +37,7 @@ end
 trips_table = DB.from(:trips)
 users_table = DB.from(:users)
 likes_table = DB.from(:likes)
+following_table = DB.from(:following)
 
 trips_table.insert(user_id: 1,
                     location: "Seoul",
