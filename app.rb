@@ -28,9 +28,10 @@ get "/" do
 
     @users_table = users_table
     pp @users_table
-    @feed = trips_table.all.to_a
-    pp @feed
 
+    @feed = trips_table.all.to_a
+    # OR trips_table.where(user_id: @current_user[:id].to_a)
+    
     view "feed"
 end
 
@@ -91,10 +92,9 @@ end
 
 get "/like/success/:id" do
     puts "params: #{params}"   
-    
     @trip = trips_table.where(id: params[:id]).to_a[0]
     @poster = users_table.where(id: @trip[:user_id]).to_a[0][:name]
-    @posterid = users_table.where(id: @trip[:user_id]).to_a[0][:name]
+    @posterid = users_table.where(id: @trip[:user_id]).to_a[0][:id]
 
     likes_table.insert(
         trip_id: params["id"],
@@ -165,7 +165,7 @@ get "/follow/user/:id" do
         target_user: @following_userid      
     )   
 
-    view "follow_success"
+    redirect "/user/#{params[:id]}"
 end
 
 get "/unfollow/user/:id" do
@@ -173,5 +173,42 @@ get "/unfollow/user/:id" do
 
     following_table.where(user_id: @current_user[:id], target_user: params["id"]).delete
 
-    redirect"/"
+    redirect "/user/#{params[:id]}"
+end
+
+get "/trip/:id/edit" do
+    puts "params: #{params}"
+    @trip = trips_table.where(id: params[:id]).to_a[0]
+    view "edit_trip"
+end
+
+post "/trip/:id/update" do
+    puts "params: #{params}"
+    @trip = trips_table.where(id: params[:id]).to_a[0]
+    @user = users_table.where(id: @trip[:user_id]).to_a[0]
+
+    trips_table.where(id: params["id"]).update(
+        user_id: session["user_id"],    
+        location: params["location"],
+        lengthnum: params["lengthnum"],
+        lengthunit: params["lengthunit"],
+        description: params["description"]
+    )
+
+    redirect "/user/#{@user[:id]}"
+end
+
+get "/trip/:id/destroy" do
+    puts "params: #{params}"
+
+    @trip = trips_table.where(id: params[:id]).to_a[0]
+    @user = users_table.where(id: @trip[:user_id]).to_a[0]
+    
+    trips_table.where(id: params["id"]).delete
+
+    redirect "/user/#{@user[:id]}"
+end
+
+get "/discover" do
+    view "/discover"
 end

@@ -6,55 +6,52 @@
     <div class="row">
         <div class="col-sm-3"></div>
         <div class="col-sm-6">
-
-        <% for trip in @feed %>
-
-            <div class="container border bg-light my-3">
-                <div class="row mt-3">
-                    <div class="col">
-                        <h2><a href="/user/<%= @users_table.where(id: trip[:user_id]).to_a[0][:id] %>"><%= @users_table.where(id: trip[:user_id]).to_a[0][:name] %></a></h2>
-                        <h3><%= trip[:location] %></h3>
-                        <h5><%= trip[:lengthnum] %> <%= trip[:lengthunit] %></h5>
+            <% for trip in @feed %>
+                <div class="container border bg-light my-3">
+                    <div class="row mt-3">
+                        <div class="col">
+                            <h2><a href="/user/<%= @users_table.where(id: trip[:user_id]).to_a[0][:id] %>"><%= @users_table.where(id: trip[:user_id]).to_a[0][:name] %></a></h2>
+                            <h3><%= trip[:location] %></h3>
+                            <h5><%= trip[:lengthnum] %> <%= trip[:lengthunit] %></h5>
+                        </div>
                     </div>
-                </div>
-                <div class="row m-1">
-                    <iframe
-                        width=100%
-                        height=100%
-                        frameborder="0" style="border:0"
-                        align="right"
-                        src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCtovsQvkIUWlNqtYwXY87gEd4ZSmJEhMw
-                        &q=<%= trip[:location] %>&zoom=5" allowfullscreen>
-                    </iframe>
-                </div>  
-                <div class="row mt-2">
-                    <div class="col-12">    
-                        <p><%= trip[:description] %></p> 
+                    <div class="row m-1">
+                        <iframe
+                            width=100%
+                            height=100%
+                            frameborder="0" style="border:0"
+                            align="right"
+                            src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCtovsQvkIUWlNqtYwXY87gEd4ZSmJEhMw
+                            &q=<%= trip[:location] %>&zoom=5" allowfullscreen>
+                        </iframe>
                     </div>  
-                </div> 
-                <div class="row mb-2">
-                    <div class="col">    
+                    <div class="row mt-2">
+                        <div class="col-12">    
+                            <p><%= trip[:description] %></p> 
+                        </div>  
+                    </div> 
+                    <div class="row mb-2">
+                        <div class="col">    
 
-                        <!-- if not signed in, point to sign-in -->
-                        <% if not @current_user %>
-                            <a href="/logins/new"><button type="button" class="btn btn-primary">Sign In to Like</button></a>   
-                        
-                        <!-- if they are signed in, see if they already like it -->
-                        <% elsif likes_table.where(user_id: @current_user[:id], trip_id: trip[:id]).to_a[0] %>
-                            <a href="/unlike/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Unlike</button></a>
-                        <!-- otherwise, give them the option to like it -->
-                        <% else %>
-                            <a href="/like/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Like</button></a>
-                        <% end %>
+                            <!-- if not signed in, point to sign-in -->
+                            <% if not @current_user %>
+                                <a href="/logins/new"><button type="button" class="btn btn-primary">Sign In to Like</button></a>   
+                            
+                            <!-- if they are signed in, see if they already like it -->
+                            <% elsif likes_table.where(user_id: @current_user[:id], trip_id: trip[:id]).to_a[0] %>
+                                <a href="/unlike/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Unlike</button></a>
+                            <!-- otherwise, give them the option to like it -->
+                            <% else %>
+                                <a href="/like/success/<%= trip[:id] %>"<button type="button" class="btn btn-primary">Like</button></a>
+                            <% end %>
 
-                    </div>
-                    <div class="col text-right">
-                        Total Likes: <%=  likes_table.where(trip_id: trip[:id]).count %>
+                        </div>
+                        <div class="col text-right">
+                            Total Likes: <%=  likes_table.where(trip_id: trip[:id]).count %>
+                        </div>   
                     </div>   
-                </div>   
-            </div>
-        <% end %>
-
+                </div>
+            <% end %>
         </div>
 
         <div class="col-sm-3"></div>

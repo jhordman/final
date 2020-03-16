@@ -1,0 +1,39 @@
+<h1>Edit Trip</h1>
+
+<form action="/trip/<%= @trip[:id] %>/update" method="post">
+  <div class="form-group">
+    <label>Location</label>
+    <input type="text" class="form-control" placeholder="City, Country, or Region" name="location" value="<%= @trip[:location] %>">
+  </div>
+  <label>Length of Trip</label>
+  <div class="form-group form-inline">
+    <select input type="text" class="custom-select my-1 mr-sm-2" name="lengthnum">
+        <option selected><%= @trip[:lengthnum] %></option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>
+    </select>
+    <select class="custom-select my-1 mr-sm-2" name="lengthunit">
+        <option selected><%= @trip[:lengthunit] %></option>
+        <option value="Days">Days</option>
+        <option value="Weeks">Weeks</option>
+        <option value="Months">Months</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label>Description</label>
+    <input type="text" class="form-control" name="description" value="<%= @trip[:description] %>">
+  </div>
+  <button type="submit" class="btn btn-primary">Update</button>
+</form>

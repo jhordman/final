@@ -8,9 +8,9 @@
 <% else %>
     <h1 class="text-center"><%= @username %>'s Trips</h1>
     <% if following_table.where(user_id: @current_user[:id], target_user: @userid).to_a[0] %>
-        <p class="text-center"><a href="/follow/user/<%= @userid %>" class="btn btn-primary">Unfollow User</a></p>
+        <p class="text-center"><a href="/unfollow/user/<%= @userid %>" class="btn btn-primary">Unfollow User</a></p>
     <% else %>
-        <p class="text-center"><a href="/unfollow/user/<%= @userid %>" class="btn btn-primary">Follow User</a></p>
+        <p class="text-center"><a href="/follow/user/<%= @userid %>" class="btn btn-primary">Follow User</a></p>
     <% end %>
 <% end %>
 
@@ -24,7 +24,10 @@
             <div class="container border bg-light my-3">
                 <div class="row mt-3">
                     <div class="col">
-                        <h3><%= trip[:location] %></h3>
+                        <h3><%= trip[:location] %>
+                        <% if @current_user && @current_user[:id] == trip[:user_id] %>
+                            (<a href="/trip/<%= trip[:id] %>/edit">edit</a> | <a href="/trip/<%= trip[:id] %>/destroy">delete</a>)
+                        <% end %></h3>
                         <h5><%= trip[:lengthnum] %> <%= trip[:lengthunit] %></h5>
                     </div>
                 </div>
@@ -70,12 +73,16 @@
 
         <div class="col-sm-3">
             <h2 class="text-center">Following</h2>
-            <% for user in @following_list %>
-                <h5 class="text-left"><%= users_table.where(id: user[:target_user]).to_a[0][:name] %></h5>
+            <% if @following_list %>
+                <% for user in @following_list %>
+                    <a href="/user/<%= users_table.where(id: user[:target_user]).to_a[0][:id] %>"><h5 class="text-left"><%= users_table.where(id: user[:target_user]).to_a[0][:name] %></h5></a>
+                <% end %>
             <% end %>
             <h2 class="text-center">Followers</h2>
-            <% for user in @follower_list %>
-                <h5 class="text-left"><%= users_table.where(id: user[:user_id]).to_a[0][:name] %></h5>
+            <% if @follower_list %>
+                <% for user in @follower_list %>
+                    <a href="/user/<%= users_table.where(id: user[:user_id]).to_a[0][:id] %>"><h5 class="text-left"><%= users_table.where(id: user[:user_id]).to_a[0][:name] %></h5></a>
+                <% end %>
             <% end %>
         </div>
     </div>
