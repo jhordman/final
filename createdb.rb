@@ -24,7 +24,7 @@ end
 DB.create_table! :following do
   primary_key :id
   foreign_key :user_id
-  String :target_user
+  Integer :target_user
 end
 
 DB.create_table! :likes do
